@@ -1,7 +1,8 @@
 package com.example.jetsnack.model
 
 data class PenumpangKereta(
-    val kode_provinsi: String,
+    val id: Int,
+    val kode_provinsi: Int,
     val nama_provinsi: String,
     val nama_stasiun: String,
     val penumpang_naik_kereta: Int,

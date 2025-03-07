@@ -123,7 +123,7 @@ fun MainContainer(
                 with(sharedTransitionScope) {
                     JetsnackBottomBar(
                         tabs = HomeSections.entries.toTypedArray(),
-                        currentRoute = currentRoute ?: HomeSections.FEED.route,
+                        currentRoute = currentRoute ?: HomeSections.BERANDA.route,
                         navigateToRoute = nestedNavController::navigateToBottomBarRoute,
                         modifier = Modifier
                             .renderInSharedTransitionScopeOverlay(
@@ -157,7 +157,7 @@ fun MainContainer(
     ) { padding ->
         NavHost(
             navController = nestedNavController.navController,
-            startDestination = HomeSections.FEED.route
+            startDestination = HomeSections.BERANDA.route
         ) {
             addHomeGraph(
                 onSnackSelected = onSnackSelected,

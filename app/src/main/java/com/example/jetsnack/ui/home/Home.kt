@@ -16,6 +16,7 @@
 
 package com.example.jetsnack.ui.home
 
+import Beranda
 import android.provider.ContactsContract.Data
 import androidx.annotation.FloatRange
 import androidx.annotation.StringRes
@@ -136,11 +137,8 @@ fun NavGraphBuilder.addHomeGraph(
     onSnackSelected: (Long, String, NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    composable(HomeSections.FEED.route) { from ->
-        Feed(
-            onSnackClick = { id, origin -> onSnackSelected(id, origin, from) },
-            modifier
-        )
+    composable(HomeSections.BERANDA.route) { from ->
+        Beranda()
     }
     composable(HomeSections.SEARCH.route) { from ->
         Search(
@@ -168,7 +166,7 @@ enum class HomeSections(
     val icon: ImageVector,
     val route: String
 ) {
-    FEED(R.string.home_feed, Icons.Outlined.Home, "home/feed"),
+    BERANDA(R.string.home_feed, Icons.Outlined.Home, "home/beranda"),
     SEARCH(R.string.home_search, Icons.Outlined.Search, "home/search"),
     DATA(R.string.home_penumpang, Icons.Outlined.Search, "home/penumpang"),
     CART(R.string.home_cart, Icons.Outlined.ShoppingCart, "home/cart"),
