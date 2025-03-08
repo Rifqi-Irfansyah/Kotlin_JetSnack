@@ -1,6 +1,5 @@
 package com.example.jetsnack.ui
 
-import Beranda
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
