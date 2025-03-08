@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.*
+import com.example.jetsnack.ui.theme.Primary
 
 class SplashScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,18 +46,18 @@ fun SplashScreenContent(onTimeout: () -> Unit = {}) {
     var startAnimation by remember { mutableStateOf(false) }
     val alphaAnim = animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(durationMillis = 1000)
+        animationSpec = tween(durationMillis = 3000)
     )
 
     LaunchedEffect(key1 = true) {
         startAnimation = true
-        delay(2500) // Tahan splash screen selama 2 detik
+        delay(2800)
         onTimeout()
     }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = Primary
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -67,15 +68,17 @@ fun SplashScreenContent(onTimeout: () -> Unit = {}) {
                 composition = composition,
                 progress = progress,
                 modifier = Modifier.fillMaxWidth(0.5f)
-                    .height(200.dp)
+                    .height(300.dp)
+                    .padding(0.dp, 50.dp, 0.dp, 0.dp)
             )
             Text(
-                text = "231511089",
-                color = Color.Black,
+                text = "  231511089\n" +
+                        "Rifqi Irfansyah",
+                color = Color.White,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(50.dp)
+                    .padding(0.dp, 250.dp, 0.dp, 0.dp)
             )
         }
     }

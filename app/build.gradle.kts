@@ -19,6 +19,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -98,6 +99,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -142,5 +146,6 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
     implementation(libs.lottie)
-    implementation("com.airbnb.android:lottie-compose:6.1.0")
+    implementation(libs.lottie.compose)
+    ksp("androidx.room:room-compiler:2.5.0")
 }

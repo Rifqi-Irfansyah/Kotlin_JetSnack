@@ -87,7 +87,7 @@ fun HeaderSection() {
     )
     val gradientColors = listOf(
         Primary,
-        Color(0xFFFF9800)
+        Color(0xFFFF0000)
     )
     Box(
         modifier = Modifier

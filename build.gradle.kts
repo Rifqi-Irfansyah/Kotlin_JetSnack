@@ -21,6 +21,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.compose) apply false
+    id("com.google.devtools.ksp") version "2.1.10-1.0.31" apply false
 }
 
 apply("${project.rootDir}/buildscripts/toml-updater-config.gradle")

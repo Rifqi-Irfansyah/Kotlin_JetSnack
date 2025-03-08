@@ -153,7 +153,7 @@ private val LocalJetsnackColors = staticCompositionLocalOf<JetsnackColors> {
  */
 fun debugColors(
     darkTheme: Boolean,
-    debugColor: Color = Color.Magenta
+    debugColor: Color = Primary
 ) = ColorScheme(
     primary = debugColor,
     onPrimary = debugColor,

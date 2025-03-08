@@ -19,6 +19,7 @@ package com.example.jetsnack.ui.home
 import Beranda
 import android.provider.ContactsContract.Data
 import android.text.style.BackgroundColorSpan
+import android.util.Log
 import androidx.annotation.FloatRange
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentScope
@@ -77,6 +78,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.core.os.ConfigurationCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
@@ -84,6 +86,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.jetsnack.R
 import com.example.jetsnack.ui.LocalNavAnimatedVisibilityScope
+import com.example.jetsnack.ui.ProfileViewModel
 import com.example.jetsnack.ui.components.JetsnackSurface
 import com.example.jetsnack.ui.home.cart.Cart
 import com.example.jetsnack.ui.home.penumpang.Penumpang
@@ -146,18 +149,20 @@ fun NavGraphBuilder.addHomeGraph(
     composable(HomeSections.BERANDA.route) { from ->
         Beranda()
     }
-    composable(HomeSections.SEARCH.route) { from ->
-        Search(
-            onSnackClick = { id, origin -> onSnackSelected(id, origin, from) },
-            modifier
-        )
-    }
+//    composable(HomeSections.SEARCH.route) { from ->
+//        Search(
+//            onSnackClick = { id, origin -> onSnackSelected(id, origin, from) },
+//            modifier
+//        )
+//    }
     composable(HomeSections.DATA.route) { from ->
         Penumpang(
         )
     }
-    composable(HomeSections.PROFILE.route) {
-        Profile(modifier)
+    composable(HomeSections.PROFILE.route) { from ->
+        Log.e("Routing", "Profile screen is being called") // Tambahkan log ini
+        val profileViewModel: ProfileViewModel = viewModel()
+        Profile(viewModel = profileViewModel)
     }
 }
 
@@ -166,7 +171,7 @@ enum class HomeSections(
     val route: String
 ) {
     BERANDA(R.string.home_feed, "home/beranda"),
-    SEARCH(R.string.home_search, "home/search"),
+//    SEARCH(R.string.home_search, "home/search"),
     DATA(R.string.home_penumpang, "home/penumpang"),
     PROFILE(R.string.home_profile, "home/profile");
 
@@ -174,7 +179,7 @@ enum class HomeSections(
         @Composable
         get() = when (this) {
             BERANDA -> Icons.Outlined.Home
-            SEARCH -> Icons.Outlined.Search
+//            SEARCH -> Icons.Outlined.Search
             DATA -> ImageVector.vectorResource(id = R.drawable.iconpenumpang)
             PROFILE -> Icons.Outlined.AccountCircle
         }
