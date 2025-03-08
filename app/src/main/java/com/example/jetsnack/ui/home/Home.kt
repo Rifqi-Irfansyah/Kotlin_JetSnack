@@ -18,6 +18,7 @@ package com.example.jetsnack.ui.home
 
 import Beranda
 import android.provider.ContactsContract.Data
+import android.text.style.BackgroundColorSpan
 import androidx.annotation.FloatRange
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentScope
@@ -30,6 +31,7 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -44,6 +46,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
@@ -67,7 +70,9 @@ import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -86,6 +91,7 @@ import com.example.jetsnack.ui.home.search.Search
 import com.example.jetsnack.ui.snackdetail.nonSpatialExpressiveSpring
 import com.example.jetsnack.ui.snackdetail.spatialExpressiveSpring
 import com.example.jetsnack.ui.theme.JetsnackTheme
+import com.example.jetsnack.ui.theme.Primary
 import java.util.Locale
 
 fun NavGraphBuilder.composableWithCompositionLocal(
@@ -150,12 +156,6 @@ fun NavGraphBuilder.addHomeGraph(
         Penumpang(
         )
     }
-    composable(HomeSections.CART.route) { from ->
-        Cart(
-            onSnackClick = { id, origin -> onSnackSelected(id, origin, from) },
-            modifier
-        )
-    }
     composable(HomeSections.PROFILE.route) {
         Profile(modifier)
     }
@@ -163,14 +163,21 @@ fun NavGraphBuilder.addHomeGraph(
 
 enum class HomeSections(
     @StringRes val title: Int,
-    val icon: ImageVector,
     val route: String
 ) {
-    BERANDA(R.string.home_feed, Icons.Outlined.Home, "home/beranda"),
-    SEARCH(R.string.home_search, Icons.Outlined.Search, "home/search"),
-    DATA(R.string.home_penumpang, Icons.Outlined.Search, "home/penumpang"),
-    CART(R.string.home_cart, Icons.Outlined.ShoppingCart, "home/cart"),
-    PROFILE(R.string.home_profile, Icons.Outlined.AccountCircle, "home/profile")
+    BERANDA(R.string.home_feed, "home/beranda"),
+    SEARCH(R.string.home_search, "home/search"),
+    DATA(R.string.home_penumpang, "home/penumpang"),
+    PROFILE(R.string.home_profile, "home/profile");
+
+    val icon: ImageVector
+        @Composable
+        get() = when (this) {
+            BERANDA -> Icons.Outlined.Home
+            SEARCH -> Icons.Outlined.Search
+            DATA -> ImageVector.vectorResource(id = R.drawable.iconpenumpang)
+            PROFILE -> Icons.Outlined.AccountCircle
+        }
 }
 
 @Composable
@@ -197,6 +204,7 @@ fun JetsnackBottomBar(
             indicator = { JetsnackBottomNavIndicator() },
             animSpec = springSpec,
             modifier = Modifier.navigationBarsPadding()
+                .background(color = Primary)
         ) {
             val configuration = LocalConfiguration.current
             val currentLocale: Locale =

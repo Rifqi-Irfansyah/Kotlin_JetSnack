@@ -3,9 +3,13 @@
 )
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable
 import android.os.Bundle
+import android.text.style.BackgroundColorSpan
+import android.widget.HorizontalScrollView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -17,6 +21,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,8 +31,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +48,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.model.content.GradientFill
 import com.example.jetsnack.R
 import com.example.jetsnack.ui.theme.Primary
 
@@ -55,19 +65,19 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Beranda() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 56.dp)
-        ) {
-            HeaderSection()
-            Spacer(modifier = Modifier.height(16.dp))
-            LayananSection()
-            Spacer(modifier = Modifier.height(16.dp))
-            RecommendationsSection()
-        }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 56.dp)
+            .clip(RoundedCornerShape(20.dp))
+    ) {
+        item { HeaderSection() }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { LayananSection() }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { ArtikelSection() }
+    }
 }
-
 @Composable
 fun HeaderSection() {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.hirobot))
@@ -75,14 +85,24 @@ fun HeaderSection() {
         composition,
         iterations = LottieConstants.IterateForever,
     )
-
+    val gradientColors = listOf(
+        Primary,
+        Color(0xFFFF9800)
+    )
     Box(
         modifier = Modifier
             .height(220.dp)
             .fillMaxWidth()
             .padding(16.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Primary)
+            .background(
+                brush = Brush.radialGradient(
+                    colors = gradientColors,
+                    center = androidx.compose.ui.geometry.Offset(0.5f, 0.5f),
+                    radius = 2000f,
+                    tileMode = TileMode.Clamp
+                )
+            )
     ) {
         Row{
             LottieAnimation(
@@ -131,11 +151,11 @@ fun LayananCard(tip: Layanan) {
             .width(100.dp)
             .height(120.dp)
             .clip(RoundedCornerShape(16.dp))
-            .border(
-                border =
-                BorderStroke(2.dp, Primary)
-            )
             .background(Color.White)
+            .border(
+                border = BorderStroke(2.dp, Primary),
+                shape = RoundedCornerShape(16.dp)
+            )
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -150,17 +170,17 @@ fun LayananCard(tip: Layanan) {
 }
 
 @Composable
-fun RecommendationsSection() {
+fun ArtikelSection() {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = "Rekomendasi Untukmu",
+            text = "Artikel",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn {
-            items(recommendations.size) { index ->
-                RecommendationCard(recommendations[index])
+        Column {
+            artikel.forEach { item ->
+                ArticleCard(item)
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
@@ -168,46 +188,29 @@ fun RecommendationsSection() {
 }
 
 @Composable
-fun RecommendationCard(recommendation: Recommendation) {
+fun ArticleCard(artikel: Artikel) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Color.Gray)
-            .clickable { }
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(artikel.websiteUrl))
+                context.startActivity(intent)
+            }
     ) {
         Image(
-            painter = painterResource(recommendation.imageRes),
+            painter = painterResource(artikel.imageRes),
             contentDescription = null,
             modifier = Modifier.height(180.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.4f))
-                .padding(16.dp),
-            contentAlignment = Alignment.BottomStart
-        ) {
-            Column {
-                Text(
-                    text = recommendation.title,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = recommendation.author,
-                    color = Color.White,
-                    fontSize = 14.sp
-                )
-            }
-        }
     }
 }
 
 data class Layanan(val imageRes: Int)
-data class Recommendation(val title: String, val author: String, val imageRes: Int)
+data class Artikel(val imageRes: Int, val websiteUrl: String)
 
 val layanan = listOf(
     Layanan(R.drawable.kaiservices),
@@ -218,9 +221,11 @@ val layanan = listOf(
     Layanan(R.drawable.kaiproperti)
 )
 
-val recommendations = listOf(
-    Recommendation("Cara Mudah Belajar Berenang", "Diah Ayu", R.drawable.chips),
-    Recommendation("Tips Latihan di Gym", "Andi", R.drawable.eclair)
+val artikel = listOf(
+    Artikel(R.drawable.content1, "https://penumpang.kai.id/promo?id=501"),
+    Artikel(R.drawable.content2, "https://penumpang.kai.id/promo?id=403"),
+    Artikel(R.drawable.content3, "https://penumpang.kai.id/promo?id=632"),
+    Artikel(R.drawable.content4, "https://penumpang.kai.id/promo?id=608"),
 )
 
 @Preview(showBackground = true)
